@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>SPA CadCli</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body ng-controller="clientesCtrl">
+    <h1>{{titulo}}</h1>
+
+
+
+    <div class="container">
+
+        <button class="btn btn-default" ng-click="novo()">Adicionar</button>
+
+        <button class="btn btn-danger" ng-click="obterHelloWorld()">Obter c/ Autenticação</button>
+
+        <div class="row">
+
+            <div class="col-sm-9">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nome</th>
+                            <th>Telefones</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cli in clientes">
+                            <td>{{cli.Id}}</td>
+                            <td>{{cli.Nome}}</td>
+                            <td>
+
+                                <span ng-repeat="tel in cli.Telefones">{{tel.Numero}} &nbsp;
+                                </span>
+
+                            </td>
+                            <td>
+                                <button ng-click="editar(cli.Id)" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-pencil"></i></button>
+                                <button ng-click="excluir(cli)" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-3">
+
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <input id="nome" type="text" ng-model="cliente.Nome" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Nascimento:</label>
+                    <input type="text" ng-model="cliente.DataNascimento" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Sexo:</label>
+                    <select class="form-control" ng-model="cliente.Sexo">
+                        <option value="0" ng-selected="cliente.Sexo == 0">Feminino</option>
+                        <option value="1" ng-selected="cliente.Sexo == 1">Masculino</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button ng-click="submit()" class="btn btn-success">Salvar</button>
+                    <button ng-click="limpar()" class="btn btn-warning">Cancelar</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Exclusão</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Quer excluir o cliente <span>{{excluirCli.Nome}}</span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button ng-click="confirmar()" type="button" class="btn btn-primary">Confirmar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+     <div class="modal fade" id="modal-login" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label>Login</label>
+                        <input type="text" ng-model="loginVM.user" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" ng-model="loginVM.pass" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button ng-click="login()" type="button" class="btn btn-primary">Login</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <script>
+        angular.module("app", [])
+            .controller("clientesCtrl", function ($scope, $http) {
+                var url = "http://fnstore-aspnet-api.azurewebsites.net/api/Clientes/";
+                
+                $scope.limpar = function () {
+                    $scope.cliente = { Id: 0, Nome: "", DataNascimento: "", Sexo: 0 };
+                };
+
+                $scope.titulo = "Listagem de Clientes";
+
+                $scope.novo = function () {
+                    $scope.limpar();
+                    $("#nome").focus();
+                };
+
+                $scope.editar = function (id) {
+                    $http.get(url + id).then(
+
+                        function (resposta) {
+                            if (resposta.status === 200) {
+                                $scope.cliente = resposta.data;
+                                //console.log($scope.cliente);
+                            }
+                        },
+                        function (error) { }
+
+                    );
+                };
+
+                $scope.submit = function () {
+
+                    if ($scope.cliente.Id != 0) {
+                        $http.put(url + $scope.cliente.Id, $scope.cliente).then(
+
+                            function (resposta) {
+
+                                if (resposta.status === 204) {
+                                    buscarDados();
+                                    $scope.limpar();
+                                }
+                            },
+                            function (error) { }
+
+                        );
+                    } else {
+                        $http.post(url, $scope.cliente).then(
+
+                            function (resposta) {
+
+                                if (resposta.status === 201) {
+                                    buscarDados();
+                                    $scope.limpar();
+                                }
+                            },
+                            function (error) { }
+
+                        );
+                    }
+
+
+                };
+
+                $scope.excluir = function (cliente) {
+                    $scope.excluirCli = cliente;
+                    $("#modal-delete").modal("show");
+                };
+
+                $scope.confirmar = function () {
+                    $http.delete(url + $scope.excluirCli.Id).then(
+
+                        function (resposta) {
+
+                            if (resposta.status === 204) {
+                                buscarDados();
+                                $("#modal-delete").modal("hide");
+                                //console.log($scope.cliente);
+                                $scope.limpar();
+                            }
+                        },
+                        function (error) { }
+
+                    );
+                };
+
+                function buscarDados() {
+                    $http.get(url)
+                    .then(function (resposta) {
+                        if (resposta.status === 200) {
+                            $scope.clientes = resposta.data;
+                        }
+                    },
+                    function (error) {
+                        console.log(error);
+                    }
+                    );
+                };
+
+                buscarDados();
+                $scope.limpar();
+
+
+                var urlHello = "http://fnstore-aspnet-api.azurewebsites.net/api/HelloWorld/";
+                $scope.loginVM = {user:"", pass:""};
+                $scope.obterHelloWorld = function () {
+                    if (!localStorage.token) {
+                        $("#modal-login").modal("show");
+                    } else {
+                        $scope.login();
+                    }
+                    
+                };
+
+                $scope.login = function () {
+                    AddHeader();
+
+                    $http.get(urlHello).then(
+                        function (resp) {
+                            alert(resp.data);
+                            $("#modal-login").modal("hide");
+                            
+                        },
+                        function (erro) {
+                            alert(erro.statusText);
+                            localStorage.clear();
+                        }
+                    );
+                };
+
+                function AddHeader() {
+                    if (!localStorage.token) {
+                        var user = $scope.loginVM.user;
+                        var pass = $scope.loginVM.pass;
+                        var encrypt = btoa(user + ":" + pass);
+                    } else {
+                        encrypt = localStorage.token;
+                    }
+                    $http.defaults.headers.common['Authorization'] = 'Basic ' + encrypt;
+                    localStorage.token = encrypt;
+                };
+
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="235fc339-e7fb-423e-9f08-7a8ac431d166" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://fnstore-wcf.azurewebsites.net/service/clienteservice.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ClienteService.xsd" MetadataType="Schema" ID="b657aeed-5ec4-4a4d-bdb3-011467e5a1c2" SourceId="1" SourceUrl="http://fnstore-wcf.azurewebsites.net/service/ClienteService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ClienteService.disco" MetadataType="Disco" ID="709be06d-4f7d-415c-bc36-51625cbd478a" SourceId="1" SourceUrl="http://fnstore-wcf.azurewebsites.net/service/ClienteService.svc?disco" />
+    <MetadataFile FileName="ClienteService1.xsd" MetadataType="Schema" ID="c123adf8-c72f-4085-8e25-b8218d905a3f" SourceId="1" SourceUrl="http://fnstore-wcf.azurewebsites.net/service/ClienteService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ClienteService2.xsd" MetadataType="Schema" ID="cc2b3247-0e1a-48e8-82e9-36c037638b46" SourceId="1" SourceUrl="http://fnstore-wcf.azurewebsites.net/service/ClienteService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ClienteService.wsdl" MetadataType="Wsdl" ID="d2b6d106-e76e-46e5-9ced-a00b4584421f" SourceId="1" SourceUrl="http://fnstore-wcf.azurewebsites.net/service/ClienteService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

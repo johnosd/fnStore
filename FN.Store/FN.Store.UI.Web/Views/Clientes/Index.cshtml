@@ -1,0 +1,93 @@
+﻿@model IEnumerable<FN.Store.Domain.Entities.Cliente>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Clientes</h2>
+
+<div>
+    <a class="btn btn-success" href="@Url.Action("Novo")">Adicionar</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Nascimento</th>
+            <th>Tels</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cli in Model)
+        {
+            <tr>
+                <td>@cli.Id</td>
+                <td>@cli.Nome</td>
+                <td>@cli.DataNascimento</td>
+                <td>@string.Join(" | ",cli.Telefones.Select(x=>x.Numero))</td>
+                <td>
+                    <a href="@Url.Action("Editar", new { id=cli.Id })" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i> Editar</a>
+                    <button onclick="excluir(@cli.Id)" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> Excluir</button>
+                </td>
+            </tr> 
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Exclusão</h4>
+      </div>
+      <div class="modal-body">
+          <p>Quer excluir o cliente <span id="cli-id"></span>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <button id="confirmar-del" type="button" class="btn btn-primary">Confirmar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+@section scripts{
+    
+    <script>
+
+        var url = "@Url.Action("Excluir")";
+
+        $("#confirmar-del").click(function () {
+            var id = $("#cli-id").text();
+
+            $.ajax({
+                url: url,
+                type: "post",
+                data: { id: id },
+                success: function (resp) {
+                    //console.log(resp);
+                    if (resp.sucesso) {
+                        $("#modal-delete").modal("hide");
+                        window.location.reload();
+                    } else {
+                        alert(resp.mensagem);
+                    }
+
+                }
+            });
+            //alert("excluir " + $("#cli-id").text());
+        });
+
+        function excluir(id) {
+            $("#cli-id").text(id);
+            $("#modal-delete").modal("show");
+        }
+
+        
+    </script>
+    
+    }
